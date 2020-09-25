@@ -107,9 +107,9 @@ void Nacional::displayGroup(){
 
 void Nacional::displayExtremes(){
     sortStates();
-    cout << "Extremos dos estados: " << countryName << endl;
-    states[0].displayTendency();
-    states[dataSize-1].displayTendency();
+    cout << "Extremos : " << countryName << endl;
+    states[0].displayTendency(false);
+    states[states.size()-1].displayTendency(false);
     
 }
 
@@ -181,7 +181,7 @@ vector<float> & Nacional::getAcumulated(){
 
     
     vector<float> iter;
-    if (acumulated.size()){        
+    if (acumulated.size()==0){        
         acumulated=vector<float>(dataSize,0);
         for(Estadual &e : states){
             iter=e.getAcumulated();

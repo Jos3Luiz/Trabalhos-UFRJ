@@ -59,6 +59,7 @@ void Estadual::displayTendency(bool verbose){
     tendency=getTendency();
     printEntryLine(
         {
+            stateName,
             to_string(tendency),
             evaluateTendency(tendency)
         });
