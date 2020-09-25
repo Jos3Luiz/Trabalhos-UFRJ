@@ -16,7 +16,7 @@ class Nacional{
     public:
 
         Nacional(string name, unsigned N, vector<string> stateNames);
-        ~Nacional();
+        
         
         //brasil only
         void displayPercentage();
@@ -45,7 +45,6 @@ class Nacional{
 
         //aux
         Estadual * findState(string stateName);
-        void deletePtrs();
         void sortStates();
 
         string countryName;
@@ -55,9 +54,9 @@ class Nacional{
         vector<Estadual> states;
 
 
-        vector<float> *acumulated=nullptr;
-        vector<float> *percentage=nullptr;
-        vector<float> *movingSum=nullptr;
+        vector<float> acumulated;
+        vector<float> percentage;
+        vector<float> movingSum;
 
 
 };

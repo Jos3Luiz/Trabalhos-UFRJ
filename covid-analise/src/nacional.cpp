@@ -42,15 +42,6 @@ Nacional::Nacional(string name, unsigned N, vector<string> stateNames){
         cerr << "CUIDADO! PARAMETRO N ESCOLHIDO E SUPERIOR AO TAMANHO DO DATASET!" << endl;
     }
 
-    acumulated=nullptr;
-    percentage=nullptr;
-    movingSum=nullptr;
-
-
-}
-
-Nacional::~Nacional(){
-    deletePtrs();
 }
 
 time_t Nacional::loadTime(){
@@ -74,7 +65,10 @@ void Nacional::setChoosen_N(unsigned new_N)
 {
     if (choosen_N!=new_N){
         choosen_N=new_N;
-        deletePtrs();
+        //delete old data
+        acumulated.clear();
+        percentage.clear();
+        movingSum.clear();
     }
     for(Estadual &e : states){
         e.setChoosen_N(new_N);
@@ -151,52 +145,52 @@ vector<float> &Nacional::getPercentage(){
     float last,day;
     vector<float> sum = getMovingSum();
     
-    if (percentage==nullptr){
-        percentage=new vector<float>(dataSize,0);
+    if (percentage.size()==0){
+        percentage= vector<float>(dataSize,0);
 
         //computePercentage iterating over own list
         last=0;
         for (unsigned i=0;i<dataSize;i++){
             day=sum[i]/choosen_N;
-		    (*percentage)[i]=computePercentage(day,last);
+		    percentage[i]=computePercentage(day,last);
             last=day;
 	    }
 
     }
-    return *percentage;
+    return percentage;
 
 }
 
 vector<float> & Nacional::getMovingSum(){
 
     vector<float> iter;
-    if (movingSum==nullptr){
+    if (movingSum.size()==0){
 
-        movingSum=new vector<float>(dataSize,0);
+        movingSum=vector<float>(dataSize,0);
         for(Estadual &e : states){
             iter=e.getMovingSum();
             for (unsigned i=0;i<dataSize;i++){
-                (*movingSum)[i]=(*movingSum)[i] + iter[i];
+                movingSum[i]=movingSum[i] + iter[i];
             }
         }
     }
-    return *movingSum;
+    return movingSum;
 }
 
 vector<float> & Nacional::getAcumulated(){
 
     
     vector<float> iter;
-    if (acumulated==nullptr){        
-        acumulated=new vector<float>(dataSize,0);
+    if (acumulated.size()){        
+        acumulated=vector<float>(dataSize,0);
         for(Estadual &e : states){
             iter=e.getAcumulated();
             for (unsigned i=0;i<dataSize;i++){
-                (*acumulated)[i]=(*acumulated)[i] + iter[i];
+                acumulated[i]=acumulated[i] + iter[i];
             }
         }
     }
-    return *acumulated;
+    return acumulated;
 }
 
 float Nacional::getTendency(){
@@ -207,35 +201,6 @@ float Nacional::getTendency(){
         );
 }
 
-void Nacional::deletePtrs(){
-    //delete old references
-    if (acumulated!=nullptr){ 
-        cout << "Mastererro1" << endl;
-        delete acumulated; 
-        acumulated=nullptr;
-    }
-    if (percentage!=nullptr){ 
-        cout << "Mastererro2" << endl;
-        delete percentage; 
-        percentage=nullptr;
-    }
-    if (movingSum!=nullptr){ 
-        cout << "Mastererro3" << endl;
-        delete movingSum; 
-        movingSum=nullptr;
-    }
-
-}
-
-
 void Nacional::sortStates(){
-
-    vector <Estadual>statesCopy=states;
-    /*for
-    cout << "wtf??" << endl;
-    printf("%p\n",statesCopy.begin());
-    printf("%p\n",statesCopy.end());
-    sort(statesCopy.begin(),statesCopy.end(),compareTendency);
-    cout << "wtf2??" << endl;*/
-    states=statesCopy;
+    sort(states.begin(),states.end(),compareTendency);
 }

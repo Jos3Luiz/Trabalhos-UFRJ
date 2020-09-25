@@ -15,9 +15,6 @@ Estadual::Estadual(string name,unsigned N,time_t begin){
     stateName=name;
     choosen_N=N;
     startTime=begin;
-    acumulated=nullptr;
-    percentage=nullptr;
-    movingSum=nullptr;
     importData();
 }
 
@@ -41,10 +38,6 @@ void Estadual::importData(){
 	}
 	file.close();
     dataSize=readData.size();
-}
-
-Estadual::~Estadual(){
-    deletePtrs();    
 }
 
 void Estadual::displayPercentage(){
@@ -76,7 +69,9 @@ void Estadual::setChoosen_N(unsigned new_N)
     if (choosen_N!=new_N){
         choosen_N=new_N;
         //delete old references
-        deletePtrs();
+        acumulated.clear();
+        percentage.clear();
+        movingSum.clear();
     }
 }
 
@@ -86,35 +81,35 @@ vector<float> & Estadual::getPercentage(){
     vector<float> sum = getMovingSum();
     
     
-    if (percentage==nullptr){
-        percentage=new vector<float>(dataSize,0);
+    if (percentage.size()==0){
+        percentage=vector<float>(dataSize,0);
 
         //computePercentage iterating over own list
         last=0;
         for (unsigned i=0;i<dataSize;i++){
             day=sum[i]/choosen_N;
-		    (*percentage)[i]=percentageAtDay(i,day,last);
+		    percentage[i]=percentageAtDay(i,day,last);
             last=day;
 	    }
 
     }
-    return *percentage;
+    return percentage;
     
 }
 
 vector<float> & Estadual::getAcumulated(){
     float total;
-    if (acumulated==nullptr){
-        acumulated=new vector<float>(dataSize,0);
+    if (acumulated.size()==0){
+        acumulated=vector<float>(dataSize,0);
 
         total=0;
         for (unsigned i=0 ; i<dataSize;i++){
             total=total+readData[i];
-            (*acumulated)[i]=total;
+            acumulated[i]=total;
         }
     }
     
-    return *acumulated;
+    return acumulated;
     
 }
 
@@ -124,23 +119,23 @@ vector<float> & Estadual::getMovingSum(){
 
     
     //compute avg
-    if (movingSum==nullptr){
-        movingSum=new vector<float>(dataSize,0);
-        (*movingSum)[0]=readData[0];
+    if (movingSum.size()==0){
+        movingSum=vector<float>(dataSize,0);
+        movingSum[0]=readData[0];
 
 	    for (today=1; today<dataSize;today++){
             //run until N
             if(today<choosen_N){
-                total=(*movingSum)[today-1]+readData[today];
+                total=movingSum[today-1]+readData[today];
             }
             else{
-                total=(*movingSum)[today-1]+readData[today]-readData[today-choosen_N];
+                total=movingSum[today-1]+readData[today]-readData[today-choosen_N];
             }
-            (*movingSum)[today]=total;
+            movingSum[today]=total;
         }
     }
 
-    return (*movingSum);
+    return movingSum;
 }
 vector<float> & Estadual::getReadData(){
     return readData;
@@ -149,7 +144,6 @@ vector<float> & Estadual::getReadData(){
 float Estadual::getTendency(){
     return percentageAtDay(dataSize-1);
 }
-
 
 float Estadual::percentageAtDay(unsigned day){
 
@@ -178,31 +172,6 @@ unsigned Estadual::getDataSize(){
 
 string & Estadual::getName(){
     return stateName;
-}
-
-void Estadual::deletePtrs(){
-    cout << stateName<<endl;
-    if (acumulated != nullptr)
-    {
-        cout << "erro1" << endl;
-        printf("%p\n",acumulated);
-        delete acumulated;
-        acumulated = nullptr;
-    }
-    if (percentage != nullptr)
-    {
-        cout << "erro2" << endl;
-        printf("%p\n",percentage);
-        delete percentage;
-        percentage = nullptr;
-    }
-    if (movingSum != nullptr)
-    {
-        cout << "erro3" << endl;
-        printf("%p\n",movingSum);
-        delete movingSum;
-        movingSum = nullptr;
-    }
 }
 
 

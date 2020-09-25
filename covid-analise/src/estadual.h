@@ -9,7 +9,7 @@ using namespace std;
 class Estadual{
     public:
         Estadual(string Name,unsigned N,time_t begin);
-        ~Estadual();
+        
         void setChoosen_N(unsigned new_N);
 
         vector<float> &getPercentage();
@@ -31,8 +31,6 @@ class Estadual{
         void importData();
         float percentageAtDay(unsigned day);
         float percentageAtDay(unsigned day,float dayAvg, float lastAvg);
-
-        void deletePtrs();
         
         unsigned choosen_N;
         time_t startTime;
@@ -41,9 +39,9 @@ class Estadual{
 
         vector<float> readData;
 
-        vector<float> *acumulated=nullptr;
-        vector<float> *percentage=nullptr;
-        vector<float> *movingSum=nullptr;
+        vector<float> acumulated;
+        vector<float> percentage;
+        vector<float> movingSum;
 
        
 
