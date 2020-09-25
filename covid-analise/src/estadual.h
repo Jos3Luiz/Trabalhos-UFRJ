@@ -10,34 +10,42 @@ class Estadual{
     public:
         Estadual(string Name,unsigned N,time_t begin);
         ~Estadual();
-
-        //unused
         void setChoosen_N(unsigned new_N);
 
         vector<float> &getPercentage();
         vector<float> &getAcumulated();
-        vector<float> &getData();
+        vector<float> &getReadData();
         vector<float> &getMovingSum();
         float getTendency();
 
         //display stuff
         void displayPercentage();
         void displayAcumulated();
-        void displayTendency();
+        void displayTendency(bool verbose=true);
+
+        //info
+        unsigned getDataSize();
+        string &getName();
 
     private:
         void importData();
         float percentageAtDay(unsigned day);
+        float percentageAtDay(unsigned day,float dayAvg, float lastAvg);
+
+        void deletePtrs();
         
         unsigned choosen_N;
         time_t startTime;
         string stateName;
         float dataSize;
 
-        vector<float> *acumulated;
-        vector<float> *percentage;
-        vector<float> *readData;
-        vector<float> *movingSum;
+        vector<float> readData;
+
+        vector<float> *acumulated=nullptr;
+        vector<float> *percentage=nullptr;
+        vector<float> *movingSum=nullptr;
+
+       
 
 };
 

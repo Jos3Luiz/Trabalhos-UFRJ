@@ -12,16 +12,16 @@ using namespace std;
 
 void printEntryLine(vector <string> strList){
 
-    cout << "|" << left << setw(20) << setfill(' ');
+    cout << "|" << left << setfill(' ') ;
     for (auto& value :strList){
-        cout << value << "|"<< setw(20);
+        cout << setw(20) << value << "|";
     }
     cout << endl;
 }
 
 
-template <class T>
-void genericDisplay(vector <T> data,time_t start){
+
+void genericDisplay(vector<float> &data,time_t start){
     
     tm *date;
     string dateStr;
@@ -30,7 +30,11 @@ void genericDisplay(vector <T> data,time_t start){
         date=localtime(&start);
         dateStr = to_string(date->tm_mday) + "/" + to_string(date->tm_mon+1) + "/" + to_string(date->tm_year+1900);
 
-        printEntryLine(dateStr,to_string(value));
+        printEntryLine(
+            {   dateStr,
+                to_string(value)
+            });
+        start=start+(60*60*24);
         /*
         cout << "|" << left << setfill(' ') << setw(20)<< 
         dateStr << "|"<<
@@ -38,7 +42,7 @@ void genericDisplay(vector <T> data,time_t start){
         */
 
         //next day
-        start=start+(60*60*24);
+        
     }
 }
 
@@ -58,7 +62,7 @@ string evaluateTendency(float tendency){
 
 }
 
-
+/*
 template <class T> 
 T computePercentage(T a,T b){
 		T res;
@@ -71,3 +75,16 @@ T computePercentage(T a,T b){
 		}
 		return res;
 }
+*/
+float computePercentage(float a,float b){
+		float res;
+		if (b==0){
+			//handle 0 division
+			res=numeric_limits<float>::infinity();
+		}
+		else{
+			res=((a-b)/b)*100;
+		}
+		return res;
+}
+
