@@ -102,6 +102,7 @@ int main(int argc,char **argv){
     string command;
     string filename;
     string option;
+    unsigned res;
     int n_option=3;
     vector<string> result;
 
@@ -135,7 +136,8 @@ int main(int argc,char **argv){
             cout <<"Não foi possivel criar o grafo. Revise o texto." << endl;
             exit(ERROR);
         }
-        cout << "A palavra mais utilizada é: " << my_grafo.mostUsedVertex().getName() << endl;
+        cout << "A palavra mais utilizada é: " << my_grafo.mostUsedVertex(&res).getName() << endl;
+        cout << "Ocorrencias: " << res << endl;
 
 	}
     else if(command=="sequencia"){
@@ -144,9 +146,10 @@ int main(int argc,char **argv){
             exit(ERROR);
         }
 
-        if ((result=my_grafo.getPopularSequence(n_option)).size()>0){
+        if ((result=my_grafo.getPopularSequence(n_option,&res)).size()>0){
             cout << "A sequencia de palavras mais utilizada é: " <<endl;
             printList (result);
+            cout << "Ocorrencias: " << res << endl;
         }
         else{
             cout << "Nao foi possivel encontrar uma sequencia com o tamanho especificado. " <<endl;
@@ -157,7 +160,8 @@ int main(int argc,char **argv){
             cout <<"Não foi possivel criar o grafo. Revise o valor de N passado para esta técnica." << endl;
             exit(ERROR);
         }
-        cout << "A sequencia mais utilizada é: " <<my_grafo.mostUsedVertex().getName() << endl;
+        cout << "A sequencia mais utilizada é: " <<my_grafo.mostUsedVertex(&res).getName() << endl;
+        cout << "Ocorrencias: " << res << endl;
 	}
 	else{
 		cout << "Comando Invalido." << endl;

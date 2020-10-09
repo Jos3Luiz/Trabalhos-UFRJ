@@ -16,11 +16,11 @@ class Grafo{
         Vertice *findVertexByName(string vname);
 
         //finds the most used single vertex.
-        Vertice &mostUsedVertex();
+        Vertice &mostUsedVertex(unsigned *res);
 
         //finds most used word sequence
         vector<string>    
-        getPopularSequence(unsigned size);
+        getPopularSequence(unsigned size,unsigned *res);
 
     private:
 

@@ -9,7 +9,7 @@
 using namespace std;
 
 Grafo::~Grafo(){
-    //clear up all the objects because new is used for instatiating
+    //clear up all the objects because new is used for instantiating
     for (auto x : allVertex) 
       delete x.second; 
 }
@@ -60,7 +60,7 @@ Vertice *Grafo::findVertexByName(string vname){
 }
 
 
-Vertice &Grafo::mostUsedVertex(){
+Vertice &Grafo::mostUsedVertex(unsigned *res){
     unsigned max=0;
     unsigned current=0;
     Vertice *choosen;
@@ -77,6 +77,7 @@ Vertice &Grafo::mostUsedVertex(){
             choosen = x.second;
         }
     }
+    *res=max;
     return *choosen;
 
 }
@@ -151,7 +152,7 @@ Grafo::__getRecursiveDeepCount(unsigned initialDeep,unsigned deep,vector<Vertice
 
 
 //wraper for all in depth search. called for each node and then checked whats the best node. returns empty vector if no sequence matches the desired lenght
-vector<string>  Grafo::getPopularSequence(unsigned size){
+vector<string>  Grafo::getPopularSequence(unsigned size,unsigned *res){
     vector<Vertice *>best,current;
     vector<string>result;
     for (auto x : allVertex){
@@ -164,6 +165,7 @@ vector<string>  Grafo::getPopularSequence(unsigned size){
     for (Vertice *x : best){
         result.push_back(x->getName());
     }
+    *res=routeLarge(best);
     return result;
 
 }
