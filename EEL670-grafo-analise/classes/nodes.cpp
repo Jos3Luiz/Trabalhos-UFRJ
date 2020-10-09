@@ -35,6 +35,7 @@ Vertice::Vertice(string word){
 }
 
 Vertice::~Vertice(){
+    //clear up all the objects because new is used for instantiating
     for (Aresta *x: sentConnections){
         delete x;
     }
@@ -110,44 +111,4 @@ unsigned Vertice::getWeightByVertex(Vertice *v){
     }
     cout << "Unable to find desired vertex" << endl;
     throw 1;
-}
-
-Caminho::Caminho(){
-    return;
-}
-Caminho::Caminho(vector<Vertice *>copy){
-    route=copy;
-}
-void Caminho::insertNode(Vertice *node){
-    route.push_back(node);
-}
-
-vector<Vertice *> & Caminho::getRoute(){
-    return  route;
-}
-unsigned Caminho::getSize(){
-    unsigned total=100;
-    unsigned weight=0;
-    if (route.size()<=1){
-        cout << "Unable to getSize with less than 2 nodes" << endl;
-        //throw 1;
-        return 0;
-    }
-    
-    total=route[0]->getWeightByVertex(route[1]);
-    for(unsigned x=1; x < route.size()-1; x++){
-        weight= route[x]->getWeightByVertex(route[x+1]);
-        total=std::min(weight,total);
-    }
-    return total;
-}
-
-void Caminho::printRoute(){
-    unsigned i;
-    for(i=0;i<route.size();i++){
-        cout << "->" << route[i]->getName();
-    }
-    cout << endl;
-    
-    
 }

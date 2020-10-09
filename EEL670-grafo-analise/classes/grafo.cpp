@@ -8,17 +8,12 @@
 #include "nodes.h"
 using namespace std;
 
-void printList(vector<Vertice *> list){
-    for (auto i : list){
-        cout << i->getName() <<"\t";
-    }
-    cout << endl;
-
-}
 Grafo::~Grafo(){
+    //clear up all the objects because new is used for instatiating
     for (auto x : allVertex) 
       delete x.second; 
 }
+
 
 void Grafo::insertArestas(string word1,string word2){
 
@@ -51,15 +46,31 @@ void Grafo::insertArestas(string word1,string word2){
     
 }
 
+//just querys the hashmap in O(1)
+Vertice *Grafo::findVertexByName(string vname){
+
+    unordered_map<string,Vertice *>::const_iterator got;
+    Vertice * result= nullptr;
+    got = allVertex.find(vname);
+    if (got!= allVertex.end()){
+        result = got->second;
+    }
+    return result;
+
+}
+
+
 Vertice &Grafo::mostUsedVertex(){
     unsigned max=0;
     unsigned current=0;
     Vertice *choosen;
-    //cout << "Starting..." << endl;
 
-
+    if (allVertex.size()<1){
+        throw invalid_argument("O grafo esta vazio!");
+    }
     for (auto x : allVertex){
-        current=x.second->getVerticeUses();
+        //search everyone pointing to that node
+        current=x.second->getVerticeBackward();
         
         if (current > max){
             max = current;
@@ -70,86 +81,66 @@ Vertice &Grafo::mostUsedVertex(){
 
 }
 
+//just a nice interface for __getRecursiveDeepCount
+vector<Vertice *> 
+Grafo::getRecursiveDeepCount(unsigned deep,Vertice * begin){
 
-Caminho Grafo::mostUsedSequence(unsigned N){
+    vector<Vertice *> start;
+    start.push_back(begin);
 
-    //iterating checking
-    Caminho bestPath;
-
-    //for unpacking
-    Caminho currentPath;
-
-    //return
-    vector <string> sequence;
-
-    Vertice *node;
-    
-    //for each entry node..
-    bool firstTime=true;
-
-    for (auto v: allVertex){
-        node = v.second;
-        
-        currentPath=getRecursiveDeepCount( Caminho({node}), N );
-
-        if (firstTime){
-             firstTime=false;
-             bestPath=currentPath;
-        }
-        //cout << "recursiving to " << node->getName() << " Returned size "<< current<<currentPath.size() << endl<<"\t";
-        //printList(currentPath);
-        //cout << endl;
-        
-
-        if (bestPath.getSize() < currentPath.getSize() && currentPath.getRoute().size()==N){
-            bestPath = currentPath;
-        }
-    }
-    cout << "ocurrencies : " << bestPath.getSize() << endl;
-    
-
-    cout << "Best matches" << endl; 
-    for (string  v: sequence){
-        cout << v << endl;
-    }
-    cout << "endseq" << endl;
-
-    return bestPath;
-
+    return __getRecursiveDeepCount(deep,deep,start);
+     
 }
 
-Caminho
-Grafo::getRecursiveDeepCount(Caminho path,unsigned deep){
+//just a auxliary function to compute the weight of a path.
+unsigned routeLarge(vector <Vertice *> path){
 
-    //recursive downhill
-    Caminho bestPath;
-
-    //for unpacking
-    Caminho currentPath;
-    Caminho newPath;
-
-    Vertice *vertexPtr;
-    //cout << "\taccessing to " << vertexPtr->getName() <<deep << endl;
-    vertexPtr=path.getRoute().back();
-
-    if ( deep == 1 or vertexPtr->getSentConnections().size()==0 ){
-        return path;
+    unsigned totalSize=0;
+    if (path.size()<=1){
+        totalSize=0;
     }
     else{
+        totalSize=path[0]->getWeightByVertex(path[1]);
+        for (unsigned i=1;i<path.size()-1;i++){
+            totalSize=min(path[i]->getWeightByVertex(path[i+1]),totalSize);
+        }
+    }
+    
+    return totalSize;
+}
 
-        bestPath=Caminho(path);
-        bestPath.insertNode(vertexPtr->getSentConnections()[0]->getDst());
+//search recursively in depth on the graph
+vector<Vertice *> 
+Grafo::__getRecursiveDeepCount(unsigned initialDeep,unsigned deep,vector<Vertice *> path){
 
+    //recursive search
+    vector<Vertice *> bestPath;
+
+    //for unpacking the result
+    vector<Vertice *> currentPath;
+    vector<Vertice *> newPath;
+
+    Vertice *vertexPtr=path.back();
+    
+    //reached the end
+    if ( deep == 1 ){
+        return path;
+    }
+    //reached a node with no more children
+    else if (vertexPtr->getSentConnections().size()==0){
+        return vector<Vertice *>();
+    }
+    
+    else{
         for(Aresta *x : vertexPtr->getSentConnections() ){
             newPath=path;
-            newPath.insertNode(x->getDst());
-            currentPath=
-                getRecursiveDeepCount(
-                    newPath,
-                    deep-1 );
-
-            if(bestPath.getSize() < currentPath.getSize()){
-                bestPath=currentPath;
+            newPath.push_back(x->getDst());
+            currentPath=__getRecursiveDeepCount(initialDeep,deep-1 ,newPath);
+            //checking if the path found is better than the previous
+            if(currentPath.size()>1){
+                if (routeLarge(bestPath) < routeLarge(currentPath)){
+                    bestPath=currentPath;
+                }
             }    
         }
     }
@@ -159,3 +150,20 @@ Grafo::getRecursiveDeepCount(Caminho path,unsigned deep){
 
 
 
+//wraper for all in depth search. called for each node and then checked whats the best node. returns empty vector if no sequence matches the desired lenght
+vector<string>  Grafo::getPopularSequence(unsigned size){
+    vector<Vertice *>best,current;
+    vector<string>result;
+    for (auto x : allVertex){
+
+        current=getRecursiveDeepCount(size,x.second);
+        if (routeLarge(current) > routeLarge(best)){
+            best=current;
+        }
+    }
+    for (Vertice *x : best){
+        result.push_back(x->getName());
+    }
+    return result;
+
+}

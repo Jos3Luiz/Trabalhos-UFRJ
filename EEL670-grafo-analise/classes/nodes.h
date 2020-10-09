@@ -54,20 +54,4 @@ class Vertice{
         vector<Aresta *>recvConnections;
         
 };
-
-
-
-class Caminho{
-    public:
-        Caminho();
-        Caminho(vector<Vertice *>copy);
-        void insertNode(Vertice *node);
-        vector<Vertice *> & getRoute();
-        unsigned getSize();
-        void printRoute();
-    private:
-        vector<Vertice *>route;
-        
-        
-};
 #endif
