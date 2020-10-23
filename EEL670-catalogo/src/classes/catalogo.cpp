@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include "catalogo.h"
 
@@ -20,22 +21,80 @@ bool operator<( Movie const& lhs, Movie const& rhs ){
 }
 
 ostream &operator<<(ostream & output, Movie &rhs){
-    output << "|" << left << setfill(' ') 
-    << setw(20) << rhs.movieName << "|"
-    << setw(20) << rhs.producerName << "|"
-    << setw(20) << rhs.rating << "|"
+    /*output  << left << setfill(' ') 
+    << setw(20) << rhs.movieName 
+    << setw(20) << rhs.producerName 
+    << setw(20) << rhs.rating 
     << endl;
+    */
+    output <<  rhs.movieName << " " <<  rhs.producerName << " " << rhs.rating << endl;
     return output;
+}
+
+istream &operator>>(istream & input, Movie &rhs){
+    /*output  << left << setfill(' ') 
+    << setw(20) << rhs.movieName 
+    << setw(20) << rhs.producerName 
+    << setw(20) << rhs.rating 
+    << endl;
+    */
+    input >>  rhs.movieName >> rhs.producerName >> rhs.rating;
+    return input;
 }
 
 
 Catalogo::Catalogo(){
-    cout << "Build catalogo" << endl;
+    ifstream inputFile;
+    string line;
+    inputFile.open("data.txt");
+    if (!inputFile.is_open()){
+		cerr << "Nao foi possivel abir o arquivo com o catalogo existente. O catalogo comecara vazio" <<endl;
+	}
+    else
+    {
+        while(inputFile >> *this){ }
+        cout << "Catalogo carregado." << " Tamanho do catalogo: " << movieList.size()<<endl;
+    }
+    
 }
 
 Catalogo::~Catalogo(){
-    cout << "deleting catalogo" << endl;
+    ofstream output;
+    output.open("data.txt", ios::out);
+    if (!output.is_open()){
+		cerr << "Nao foi possivel abir o arquivo para salvar o catalogo." <<endl;
+	}
+    else
+    {
+
+        output << *this;
+        cout << "Catalogo salvo." << " Tamanho do catalogo: " << movieList.size()<<endl;
+    }
+    
 }
+
+ostream &operator<< (ostream & output, const Catalogo &rhs){
+/*    output << "|" << left << setfill(' ') 
+    << setw(20) << "Nome" << "|"
+    << setw(20) << "Produtor" << "|"
+    << setw(20) << "Avaliacao" << "|"
+    << endl;*/
+    for(auto i : rhs.movieList){
+        output << i;
+    }
+    return output;
+}
+
+istream &operator>> (istream & input, Catalogo &rhs){
+    
+    Movie m;
+    if (input >> m){
+        rhs.operator+=(m); 
+    }
+    return input;
+
+}
+
 
 vector<Movie> & Catalogo::operator+= (Movie &toAdd){
     movieList.push_back(toAdd);
@@ -93,24 +152,4 @@ Movie * Catalogo::searchPerRating(){
         }
     }
     return result;
-}
-
-ostream &operator<< (ostream & output, const Catalogo &rhs){
-    output << "|" << left << setfill(' ') 
-    << setw(20) << "Nome" << "|"
-    << setw(20) << "Produtor" << "|"
-    << setw(20) << "Avaliacao" << "|"
-    << endl;
-    for(auto i : rhs.movieList){
-        output << i;
-    }
-    return output;
-}
-
-istream &operator>> (istream & input, Catalogo &rhs){
-    Movie m;
-    cin >> m.movieName >> m.producerName >> m.rating;
-    rhs.operator+=(m);
-    return input;
-
 }
