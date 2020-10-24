@@ -13,11 +13,11 @@ bool operator==( Movie const& lhs, Movie const& rhs ){
 }
 
 bool operator>( Movie const& lhs, Movie const& rhs ){
-    return lhs.movieName < lhs.movieName;
+    return lhs.movieName > lhs.movieName;
 }
 
 bool operator<( Movie const& lhs, Movie const& rhs ){
-    return lhs.movieName > lhs.movieName;
+    return lhs.movieName < lhs.movieName;
 }
 
 ostream &operator<<(ostream & output, Movie &rhs){
@@ -55,6 +55,7 @@ Catalogo::Catalogo(){
         while(inputFile >> *this){ }
         cout << "Catalogo carregado." << " Tamanho do catalogo: " << movieList.size()<<endl;
     }
+    sort (movieList.begin(), movieList.end());
     
 }
 
@@ -98,20 +99,26 @@ istream &operator>> (istream & input, Catalogo &rhs){
 
 vector<Movie> & Catalogo::operator+= (Movie &toAdd){
     movieList.push_back(toAdd);
-    sort (movieList.begin(), movieList.begin());
+    sort (movieList.begin(), movieList.end());
     return movieList;
 }
 
 vector<Movie> & Catalogo::operator+= (vector<Movie> &toAdd){
     movieList.insert(movieList.end(),toAdd.begin(),toAdd.end());
-    sort (movieList.begin(), movieList.begin());
+    sort (movieList.begin(), movieList.end());
     return movieList;
 }
 
-vector<Movie> & Catalogo::operator-= (Movie &toRemove){
+bool Catalogo::operator-= (string &toRemove){
     
-    movieList.erase(find(movieList.begin(),movieList.end(),toRemove));
-    return movieList;
+    Movie *found;
+    found=this->operator()(toRemove);
+    vector<Movie>::iterator it (found);
+    if (found){
+        movieList.erase(it);
+        return true;
+    }
+    return false;
 }
 
 Movie * Catalogo::operator() (string name){
@@ -127,7 +134,7 @@ Movie * Catalogo::operator() (string name){
 
 Movie * Catalogo::operator() (string name,string producer){
     Movie *result=this->operator()(name);
-    if (!result){
+    if (result){
         result->producerName=producer;
     }
     return result;
@@ -135,7 +142,7 @@ Movie * Catalogo::operator() (string name,string producer){
 
 Movie * Catalogo::operator() (string name,double rate){
     Movie *result=this->operator()(name);
-    if (!result){
+    if (result){
         result->rating=rate;
     }
     return result;

@@ -22,7 +22,7 @@ bool operator==(Movie const& lhs, Movie const& rhs);
 bool operator>(Movie const& lhs, Movie const& rhs);
 bool operator<(Movie const& lhs, Movie const& rhs);
 ostream &operator<<(ostream & lhs, Movie &rhs);
-
+istream &operator>>(istream & input, Movie &rhs);
 
 class Catalogo{
     friend ostream &operator<< (ostream & lhs, const Catalogo &rhs);
@@ -37,7 +37,7 @@ class Catalogo{
         //insert movie list
         vector<Movie> & operator+= (vector<Movie> &toAdd);
         //delete a movie
-        vector<Movie> & operator-= (Movie &toRemove);
+        bool operator-= (string &toRemove);
 
 
         //search for movie
