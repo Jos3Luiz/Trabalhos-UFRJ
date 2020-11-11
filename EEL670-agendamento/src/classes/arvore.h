@@ -6,6 +6,7 @@
 
 #include "paciente.h"
 
+//each node of the tree
 template <typename type_data>
 struct Node
 {
@@ -14,7 +15,7 @@ struct Node
     Node *left;
     Node();
 };
-
+//just bc new operator is used, a constructor is necessary. Also some QOL bc starts ptrs as null.
 template <typename type_data>
 Node<type_data>::Node() : right(nullptr), left(nullptr){};
 
@@ -33,9 +34,9 @@ public:
     void display(ostream &output);
 
 private:
-    void recursivePrint(Node<T> *begin, ostream &output);
-    void recursiveDelete(Node<T> *begin);
-    Node<T> *recursiveInsert(Node<T> *begin, const T &toAdd);
+    void recursivePrint(Node<T> *begin, ostream &output);           //used to display
+    void recursiveDelete(Node<T> *begin);                           //used in destructor
+    Node<T> *recursiveInsert(Node<T> *begin, const T &toAdd);       
 
     template <typename type_data>
     Node<T> *recursiveSearch(Node<T> *begin, const type_data &name);
@@ -98,6 +99,7 @@ void Arvore<T>::recursivePrint(Node<T> *begin, ostream &output)
     {
         recursivePrint(begin->right, output);
     }
+    //to acess in alphabetic order all nodes on the right should be accessed first.
     output << begin->data << endl;
     if (begin->left)
     {
@@ -116,6 +118,7 @@ void Arvore<T>::recursiveDelete(Node<T> *begin)
     {
         recursiveDelete(begin->left);
     }
+    //access the farest and delete their content
     delete begin;
 }
 
@@ -157,10 +160,10 @@ Node<T> *Arvore<T>::recursiveInsert(Node<T> *begin, const T &toAdd)
     }
 }
 
+//wraper for recursive search
 template <typename T>
 T *Arvore<T>::operator()(const string &name)
 {
-
     return &(recursiveSearch(start, name)->data);
 }
 

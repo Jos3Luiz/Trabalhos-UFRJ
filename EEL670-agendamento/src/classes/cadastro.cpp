@@ -4,7 +4,7 @@
 #include "cadastro.h"
 
 
-
+//avoid compilation error when Cadastro::Cadastro() not found
 Cadastro::Cadastro(){}
 
 

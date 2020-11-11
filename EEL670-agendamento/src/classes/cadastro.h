@@ -8,6 +8,8 @@
 
 using namespace std;
 
+
+//some exceptions to use when not found in tree
 class notFound : public exception
 {
     public:
@@ -17,7 +19,7 @@ class notFound : public exception
     }
 
 };
-
+//if already in the tree 
 class alreadyInserted : public exception
 {
     public:
@@ -28,6 +30,7 @@ class alreadyInserted : public exception
 
 };
 
+//mostly a wraper to Arvore object
 class Cadastro{
     //friend class Arvore;
 

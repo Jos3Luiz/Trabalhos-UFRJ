@@ -69,7 +69,7 @@ double Paciente_Doente::getGravidade(){
     return gravidade;
 }
 
-//binded in compilation time
+//binded in compilation time so another constructor is needed
 Paciente_Doente::Paciente_Doente(){
     setDetails();
 }

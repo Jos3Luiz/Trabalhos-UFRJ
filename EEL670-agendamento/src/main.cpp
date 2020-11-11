@@ -10,7 +10,7 @@ using namespace std;
 typedef enum opcao{op_exibir,op_inserir,op_buscar,op_ajuda,op_sair} options;
 
 
-//for read option
+//for read option_type
 istream& operator>>( istream& is, options& i )
 {
     int tmp ;
@@ -26,6 +26,7 @@ istream& operator>>( istream& is, options& i )
     return is ;
 }
 
+//displays menu
 options getOpt(){
     options result;
     cout 
@@ -73,6 +74,7 @@ void inserir(Cadastro &myCadastro){
 
 
     }
+    //reads info and stores it on pacient
     cin >> *p;
     try{
         myCadastro.insere(*p);
@@ -105,6 +107,16 @@ void buscar(Cadastro &myCadastro){
 
 void ajuda(){
     cout << "Exibindo menu de ajuda" << endl;
+    cout << "Opções do menu: "<<endl
+	<<"1.Exibir paciente -mostra o conteudo em ordem alfabética de todos os pacientes existentes na árvore."<<endl
+	<<"2.Inserir Paciente - Recebe as informaçoes e cadastra um novo paciente."<<endl
+	<<"     Os Pacientes podem ser de 3 tipos:"<<endl
+	<<"     Pacinete comum - não possui informações adicionais"<<endl
+	<<"     Paciente doente- possui um double indicando a gravidade da doença"<<endl
+	<<"     Paciente internado - possui um unsigned indicando o tempo internado."<<endl
+	<<"3.Busca Paciente - Mostra as informações de um paciente pesquisando pelo nome dele"<<endl
+	<<"4.Ajuda - mostra esse menu"<<endl
+	<<"5.Sair - deixa o programa"<<endl;
 }
 
 int main(){
