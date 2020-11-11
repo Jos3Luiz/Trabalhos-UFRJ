@@ -1,6 +1,6 @@
 
-main: main.cpp classes/paciente.cpp  classes/cadastro.h  
-	g++ -g main.cpp classes/paciente.cpp -o main -Wall
+main: main.cpp classes/paciente.cpp  classes/arvore.h  classes/cadastro.cpp 
+	g++ -g main.cpp classes/paciente.cpp classes/cadastro.cpp -o main -Wall
 	
 
 clean:

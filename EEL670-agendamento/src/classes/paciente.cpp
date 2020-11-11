@@ -1,10 +1,21 @@
 #include <string.h>
+#include <iostream>
 #include "paciente.h"
 
 using namespace std;
 
-ostream &operator <<(ostream &lhs,Paciente&rhs){
-    lhs << rhs.getName();
+/*---------------- Paciente_base------------------*/
+
+
+ostream &operator <<(ostream &output,Paciente& p){
+    output << " Nome: " << p.getName() <<" detalhes: "<< p.details << endl ;
+    return output;
+
+}
+istream &operator >>(istream &lhs,Paciente&rhs){
+    string nome;
+    lhs >> nome;
+    rhs.name=nome;
     return lhs;
 
 }
@@ -19,11 +30,13 @@ string &Paciente::getName(){
 
 Paciente::Paciente(const Paciente &paciente){
     this->name=paciente.name;
+    this->details=paciente.details;
 }
 
 Paciente::Paciente(){
-    this->name="";
+    setDetails();
 }
+
 
 bool Paciente::operator>(Paciente const& other){
     return this->name > other.name;
@@ -37,6 +50,30 @@ bool Paciente::operator==(Paciente const& other){
     return this->name == other.name;
 }
 
-string &Paciente_internado::getDisease(){
-    return disease;
+void Paciente::setDetails(){
+    details= "Paciente base,não há detalhes adicionais";
+}
+
+
+/*---------------- Paciente_derivados------------------*/
+
+void Paciente_Doente::setDetails(){
+    details= "Paciente doente, gravidade="+to_string(gravidade);
+}
+
+void Paciente_Internado::setDetails(){
+    details= "Paciente internado, dias internado="+to_string(diasInternados);
+}
+
+double Paciente_Doente::getGravidade(){
+    return gravidade;
+}
+
+//binded in compilation time
+Paciente_Doente::Paciente_Doente(){
+    setDetails();
+}
+
+Paciente_Internado::Paciente_Internado(){
+    setDetails();
 }
