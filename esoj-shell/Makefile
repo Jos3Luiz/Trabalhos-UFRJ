@@ -2,7 +2,7 @@ EXECS = esojshell
 				
 
 main: main.c
-	g++ main.c -o esojshell -Wall
+	gcc main.c -o awesomeshell -Wall
 	
 
 clean:
